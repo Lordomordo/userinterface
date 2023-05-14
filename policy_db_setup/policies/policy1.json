@@ -1,0 +1,20 @@
+{
+    "id": "policy_1",
+    "description": "the total power of devices connected to the smart plug cannot exceed the rated power of the smart plug, if the work_power of the device is greater than 30",
+    "matching_attributes": {
+        "device_actor": ["type", "properties.work_power"],
+        "device_actee": ["type", "properties.rated_power", "relationship.plug_by"]
+    },
+    "type": "S2",
+    "device_actor": {
+        "type": "*"
+    },
+    "action": "plug_in",
+    "relation": "device_actor.actions.connected_to.id == device_actee.id",
+    "device_actee": {
+        "type": "smart_plug"
+    },
+    "assertion": "device_actor.properties.work_power.value >= device_actee.properties.rated_power.value - sum([device.properties.work_power.value for device in devices if device.links.connected_to and device_actee.id in device.links.connected_to])",
+    "response": "Deny",
+    "alert": "The total power of devices connected to the smart plug cannot exceed the rated power of the smart plug"
+}

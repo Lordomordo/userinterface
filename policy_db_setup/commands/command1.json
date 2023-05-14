@@ -1,0 +1,7 @@
+{
+    "device_actor": {
+        "type": "window",
+        "id": "urn:dev:wot:com:window:1"
+    },
+    "action": "open"
+}

@@ -1,0 +1,155 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:smartcam:cam:2",
+    "title": "smart-cam-2",
+    "@type": "smartcam",
+    "securityDefinitions": {
+        "basic_sc": {
+            "scheme": "basic",
+            "in": "header"
+        },
+        "nosec_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": [
+        "nosec_sc"
+    ],
+    "properties": {
+        "on": {
+            "writable": true,
+            "schema": { "type": "boolean" },
+            "forms": [{ "href": "/things/lamp/properties/on" }],
+            "status": true
+          },
+        "recording-on": {
+            "writable": true,
+            "schema": { "type": "boolean" },
+            "forms": [{ "href": "/things/lamp/properties/recording" }],
+            "status": false
+        }
+    },
+    "actions": {
+        "switch-on": {
+            "description": "On the cam",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": false,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        },
+        "switch-off": {
+            "description": "Off the cam",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": true,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        },
+        "record-on": {
+            "description": "Start Recording",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "recording-on",
+                    "negate": false,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        },
+        "record-off": {
+            "description": "Stop Recording",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "recording-on",
+                    "negate": true,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }
+    },
+    "events": {
+        "send_status": {
+            "description": "Send status to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        },
+        "get_status": {
+            "description": "Get status from the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        },
+        "alert": {
+            "description": "Send alert to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        }
+    },
+    "links": [{
+        "href": "urn:dev:wot:com:controller:cam:1",
+        "rel": "controlledBy",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "building_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "urn:dev:wot:com:noniot:zone:2",
+        "rel": "feeds",
+        "mediaType": "application/td"
+    }]
+}

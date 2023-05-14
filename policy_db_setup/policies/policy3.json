@@ -1,0 +1,20 @@
+{	
+	"id": "policy_3",
+	"description": "Deny: turn on AC, when high_power_mode is with status True",
+	"matching attributes": {
+		"device_actor": ["type", "property.on"],
+		"device_actee": ["type", "property.high_power", "links.feed"]
+    },
+	"type": "S4",
+	"device_actor": {
+		"type": "ac"
+    },
+    "action": "on",
+    "relation": "set(device_actor.links.feeds) & set(device_actee.links.feeds)",
+    "device_actee": {
+	    "type": "brick1:Thermostat"
+	},
+    "assertion": "device_actee.properties.high_power.status == True",
+    "response": "Deny",
+    "alert": "Thermostat is set to high power mode. You can't turn on the AC"
+}

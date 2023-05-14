@@ -1,0 +1,21 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:noniot:light:5",
+    "title": "light",
+    "@type": "noniot",
+    "links": [{
+        "href": "urn:dev:wot:com:smartplug:plug:5",
+        "rel": "connectedTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "building_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "urn:dev:wot:com:noniot:zone:3",
+        "rel": "feeds",
+        "mediaType": "application/td"
+    }]
+}

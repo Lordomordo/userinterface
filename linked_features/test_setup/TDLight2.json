@@ -1,0 +1,108 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:example:servient:15",
+    "title": "light2",
+    "@type": "light",
+    "securityDefinitions": {
+        "basic_sc": {
+            "scheme": "basic",
+            "in": "header"
+        },
+        "nosec_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": [
+        "nosec_sc"
+    ],
+    "properties": {
+        "on": {
+            "writable": true,
+            "schema": { "type": "boolean" },
+            "forms": [{ "href": "/things/lamp/properties/on" }]
+          },
+          "brightness": {
+            "writable": true,
+            "schema": "range",
+            "forms": [{ "href": "/things/lamp/properties/brightness" }]
+          }
+    },
+    "actions": {
+        "switch-on": {
+            "description": "On the light",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ]
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }, 
+        "switch-off": {
+            "description": "Off the light",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ]
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }
+    },
+    "events": {
+        "send_status": {
+            "description": "Send status to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        },
+        "get_status": {
+            "description": "Get status from the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        },
+        "alert": {
+            "description": "Send alert to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        }
+    },
+    "links": [{
+        "href": "urn:dev:wot:com:example:servient:31",
+        "rel": "controlledBy",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "test_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    }]
+}

@@ -1,0 +1,115 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:sensor:temperature:1",
+    "title": "temperator-sensor",
+    "@type": "sensor",
+    "securityDefinitions": {
+        "basic_sc": {
+            "scheme": "basic",
+            "in": "header"
+        },
+        "nosec_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": [
+        "nosec_sc"
+    ],
+    "properties": {
+        "on": {
+            "writable": true,
+            "schema": { "type": "boolean" },
+            "forms": [{ "href": "/things/lamp/properties/on" }],
+            "status": true
+          }
+    },
+    "actions": {
+        "on": {
+            "description": "On the sensor",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": false,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }, 
+        "off": {
+            "description": "Off the sensor",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": true,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }
+    },
+    "events": {
+        "send_status": {
+            "description": "Send status to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "heartbeat"
+                    ]
+                }
+            ]
+        },
+        "get_status": {
+            "description": "Get status from the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "heartbeat"
+                    ]
+                }
+            ]
+        },
+        "alert": {
+            "description": "Send alert to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "heartbeat"
+                    ]
+                }
+            ]
+        }
+    },
+    "links": [{
+        "href": "urn:dev:wot:com:controller:hvac:1",
+        "rel": "controlledBy",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "building_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "urn:dev:wot:com:noniot:zone:4",
+        "rel": "feeds",
+        "mediaType": "application/td"
+    }]
+}

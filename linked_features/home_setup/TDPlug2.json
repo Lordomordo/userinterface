@@ -1,0 +1,110 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:smartplug:plug:2",
+    "title": "smart-plug",
+    "@type": "smartplug",
+    "securityDefinitions": {
+        "basic_sc": {
+            "scheme": "basic",
+            "in": "header"
+        },
+        "nosec_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": [
+        "nosec_sc"
+    ],
+    "properties": {
+        "on": {
+            "writable": true,
+            "schema": { "type": "boolean" },
+            "forms": [{ "href": "/things/lamp/properties/on" }],
+            "status": true
+          }
+    },
+    "actions": {
+        "on": {
+            "description": "On the plug",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": false,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        },
+        "off": {
+            "description": "Off the plug",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": true,
+                    "type": "self"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }
+    },
+    "events": {
+        "send_status": {
+            "description": "Send status to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "heartbeat"
+                    ]
+                }
+            ]
+        },
+        "get_status": {
+            "description": "Get status from the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "heartbeat"
+                    ]
+                }
+            ]
+        },
+        "alert": {
+            "description": "Send alert to the controller",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "heartbeat"
+                    ]
+                }
+            ]
+        }
+    },
+    "links": [{
+        "href": "urn:dev:wot:com:controller:home:1",
+        "rel": "controlledBy",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "home_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    }]
+}

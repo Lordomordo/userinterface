@@ -1,0 +1,12 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:noniot:router:2",
+    "title": "router",
+    "@type": "noniot",
+    "links": [
+    {
+        "href": "building_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    }]
+}

@@ -1,0 +1,18 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:noniot:tab:1",
+    "title": "tab",
+    "@type": "noniot",
+    "links": [
+        {
+            "href": "home_setup",
+            "rel": "belongsTo",
+            "mediaType": "application/td"
+        },
+        {
+            "href": "urn:dev:wot:com:noniot:router:1",
+            "rel": "connectedTo",
+            "mediaType": "application/td"
+        }
+    ]
+}

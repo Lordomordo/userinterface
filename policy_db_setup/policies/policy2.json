@@ -1,0 +1,20 @@
+{
+    "id": "policy_2",
+    "description": "cannot open window when the AC is on in the same zone",
+    "matching_attributes": {
+        "device_actor": ["type", "links.feeds"],
+        "device_actee": ["type", "links.feeds", "property.on"]
+    },
+    "type": "S1",
+    "device_actor": {
+        "type": "window"
+    },
+    "action": "open",
+    "relation": "set(device_actor.links.feeds) & set(device_actee.links.feeds)",
+    "device_actee": {
+        "type": "ac"
+    },
+    "assertion": "device_actee.properties.on.status == True",
+    "response": "Double Check",
+    "alert": "You are trying to open a window in the same zone where AC is operating. Please confirm you want to do it"
+}

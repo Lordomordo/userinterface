@@ -1,0 +1,17 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:noniot:zone:3",
+    "title": "zone-2",
+    "@type": "noniot",
+    "links": [
+    {
+        "href": "building_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "urn:dev:wot:com:noniot:zone:4",
+        "rel": "partOf",
+        "mediaType": "application/td"
+    }]
+}

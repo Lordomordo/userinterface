@@ -1,0 +1,87 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:controller:building:1",
+    "title": "building-controller",
+    "@type": "smart_controller",
+    "securityDefinitions": {
+        "basic_sc": {
+            "scheme": "basic",
+            "in": "header"
+        },
+        "nosec_sc": {
+            "scheme": "nosec"
+        }
+    },
+    "security": [
+        "nosec_sc"
+    ],
+    "properties": {
+        "on": {
+            "writable": true,
+            "schema": { "type": "boolean" },
+            "forms": [{ "href": "/things/smart_controller/properties/on" }],
+            "status": true
+        }
+    },
+    "actions": {
+        "switch_on_all": {
+            "description": "Switch on all childs",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": false,
+                    "type": "dependents"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        },
+        "switch_off_all": {
+            "description": "Switch off all childs",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "invokeaction"
+                    ],
+                    "function": "on",
+                    "negate": true,
+                    "type": "dependents"
+                }
+            ],
+            "safe": false,
+            "idempotent": false
+        }
+    },
+    "events": {
+        "irregular_shutdown": {
+            "description": "Emergency / Failure shutdown",
+            "forms": [
+                {
+                    "href": "http:www.a.a",
+                    "contentType": "application/json",
+                    "op": [
+                        "subscribeevent"
+                    ]
+                }
+            ]
+        }
+    },
+    "links": [
+        {
+            "href": "building_setup",
+            "rel": "belongsTo",
+            "mediaType": "application/td"
+        },
+        {
+            "href": "urn:dev:wot:com:noniot:router:2",
+            "rel": "connectedTo",
+            "mediaType": "application/td"
+        }]
+}

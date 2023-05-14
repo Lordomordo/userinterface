@@ -1,0 +1,10 @@
+{
+    "device_actor": {
+        "type": "fan",
+        "id": "urn:dev:wot:com:fan:1"
+    },
+    "action": "plug_in",
+    "device_actee": {
+        "id": "urn:dev:wot:com:smart_plug:1"
+    }
+}

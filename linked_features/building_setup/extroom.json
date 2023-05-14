@@ -1,0 +1,17 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:noniot:room:6",
+    "title": "extension-room",
+    "@type": "noniot",
+    "links": [
+    {
+        "href": "building_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "urn:dev:wot:com:noniot:zone:3",
+        "rel": "partOf",
+        "mediaType": "application/td"
+    }]
+}

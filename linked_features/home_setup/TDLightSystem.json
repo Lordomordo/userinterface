@@ -1,0 +1,17 @@
+{
+    "@context": "https://www.w3.org/2019/wot/td/v1",
+    "id": "urn:dev:wot:com:noniot:lightsystem:1",
+    "title": "Light System",
+    "@type": "noniot",
+    "links": [
+    {
+        "href": "home_setup",
+        "rel": "belongsTo",
+        "mediaType": "application/td"
+    },
+    {
+        "href": "urn:dev:wot:com:noniot:zone:1",
+        "rel": "feeds",
+        "mediaType": "application/td"
+    }]
+}
