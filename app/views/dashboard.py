@@ -13,31 +13,7 @@ def home():
     """
     return render_template("homescreen.html", tagname = 'home')
 
-@dashboard.route('/links/<setup>')
-def setup_links(setup):
-    """
-    Render the home page for the 'dashboard' module
-    This returns the names and URLs of adjacent directories
-    """
-    nsrv_obj = Neo4jService()
-    all_setups = nsrv_obj.run_q("MATCH (n)-[:belongsTo]->(m) RETURN m", {})
-    setups_json = all_setups.data()
-    setups_labels = [list(node['m'].labels)[0] for node in setups_json]
-    # [{'m': Node('home_setup', setup=True)}, {'m': Node('home_setup', setup=True)}]
-    return render_template("links.html", tagname = 'links', setup = setup, setup_labels = set(setups_labels))
 
-@dashboard.route('/links')
-def links():
-    """
-    Render the home page for the 'dashboard' module
-    This returns the names and URLs of adjacent directories
-    """
-    nsrv_obj = Neo4jService()
-    all_setups = nsrv_obj.run_q("MATCH (n)-[:belongsTo]->(m) RETURN m", {})
-    setups_json = all_setups.data()
-    setups_labels = [list(node['m'].labels)[0] for node in setups_json]
-    # [{'m': Node('home_setup', setup=True)}, {'m': Node('home_setup', setup=True)}]
-    return render_template("links.html", tagname = 'links', setup = setups_labels[0] if setups_labels else "", setup_labels = set(setups_labels))
 
 @dashboard.route('/delete/<setup>')
 def delete_setup(setup):
@@ -104,6 +80,15 @@ def policylist():
     policies_ids = {polici["id"]: {"description": polici["description"], "device_actor": polici["device_actor"], "device_actee": polici["device_actee"]}for polici in policies}
     return render_template('policylist.html', tagname = 'policylist', policies_ids = policies_ids)
 
+@dashboard.route('/pendingPolicies')
+def pendingPolicies():
+
+    return render_template('pendingPolicies.html')
+
+@dashboard.route('/community')
+def community():
+
+  return render_template('community.html')
 @dashboard.route('/thinglist')
 def thinglist():
 
@@ -112,33 +97,34 @@ def thinglist():
     thing_ids = {thing["id"]: {"title": thing["title"]} for thing in things}
     return render_template('thinglist.html', tagname = 'thinglist', thing_ids = thing_ids)
 
-@dashboard.route('/deleteDevice')
-def deleteDevice():
 
-    mongo_service= MongoService()
-    things = mongo_service.find_things(None)
-    thing_ids = [thing["id"] for thing in things]
-    return render_template('deleteDevice.html', tagname = 'deleteDevice', thing_ids= thing_ids)
 
 @dashboard.route('/addDevice')
 def addDevice():
     return render_template('addDevice.html', tagname='addDevice')
 
+@dashboard.route('/addPolicy')
+def addPolicy():
+    return render_template('addPolicy.html', tagname='addPolicy')
+
+@dashboard.route('/deletePolicy')
+def deletePolicy():
+    mongo_service= MongoService()
+    policies = mongo_service.find_policies(None)
+    policyid = [policy["id"] for policy in policies]
+    return render_template('deletePolicy.html', tagname='deletePolicy', policyid=policyid)
+
+
 @dashboard.route('/notifications')
 def notifications():
         # Get notifications data from database or other source
         mongo_service= MongoService()
-        notifications = mongo_service.get_notifications(None)
-        notification_ids = {notification["number"]: {"content": notification["content"], "time": notification["time"], "date": notification["date"]} for notification in notifications}
+#        notifications = mongo_service.get_notifications(None)
+ #       notification_ids = {notification["number"]: {"content": notification["content"], "time": notification["time"], "date": notification["date"]} for notification in notifications}
 
-        return render_template('notifications.html', tagname= 'notifications',notification_ids=notification_ids)
+        return render_template('notifications.html', tagname= 'notifications')
 
-@dashboard.route('/policy')
-def policy():
-    """
-    Render the policy page for the 'dashboard' module
-    """
-    return render_template('policy.html', tagname = 'policy')
+
 
 @dashboard.route('/command')
 def command():

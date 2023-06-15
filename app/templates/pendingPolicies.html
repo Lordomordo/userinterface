@@ -1,0 +1,119 @@
+{% extends "home.html" %}
+
+
+{% block dashboard_content %}
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+.container {
+    display: flex;
+  }
+</style>
+
+    <div class="col-md-9">
+
+<h2 class="text-center">Get Pending Policies</h2>
+      <h6 class="text-center">-Here you can look at your created policies and decide if you want to add them to the system-</h6>
+      <br><br>
+
+<div class="container">
+  <div class="form-group">
+    <label for="deviceType">Device Type:</label>
+    <select id="deviceType" name="deviceType">
+      <option value="">--Please choose an option--</option>
+      <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
+      <option value="smartphone">Smartphone</option>
+      <option value="thermostat">Thermostat</option>
+      <option value="washer">Washer</option>
+      <option value="washing_machine">Washing Machine</option>
+      <option value="weather_station">Weather Station</option>
+      <option value="window">Window</option>
+    </select>
+  </div>
+  <div class="form-group" style="margin-left: 250px">
+    <label>Policies:</label>
+    <div id="policy-list"></div>
+  </div>
+</div>
+
+<script>
+document.getElementById("deviceType").addEventListener("change", function() {
+  var policyList = document.getElementById("policy-list");
+  policyList.innerHTML = "";
+
+  if (this.value !== "") {
+    fetch(`http://localhost:8080/pending_new_sub_policies/${this.value}`)
+      .then(response => response.text())
+      .then(data => {
+        var policyElement = document.createElement("div");
+        policyElement.textContent = data;
+        policyList.appendChild(policyElement);
+      });
+  }
+});
+
+</script>
+
+<div id="policy-details" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black;">
+  <pre id="policy-code"></pre>
+  <button id="close-popup">Close</button>
+  <button id="update-policy" style="position: absolute; bottom: 20px; right: 20px; background-color: blue;">Update Policy</button>
+</div>
+
+<script>
+  var policyList = document.getElementById("policy-list");
+  policyList.addEventListener("click", function(event) {
+    if (event.target.tagName === "DIV") {
+      var policyDetails = document.getElementById("policy-details");
+      policyDetails.style.display = "block";
+    }
+  });
+
+  var closePopupButton = document.getElementById("close-popup");
+  closePopupButton.addEventListener("click", function() {
+    var policyDetails = document.getElementById("policy-details");
+    policyDetails.style.display = "none";
+  });
+var policyList = document.getElementById("policy-list");
+policyList.addEventListener("click", function(event) {
+  if (event.target.tagName === "DIV") {
+    var policyName = event.target.textContent;
+    var policyCodeElement = document.getElementById("policy-code");
+    policyCodeElement.textContent = policyName;
+
+    var policyDetails = document.getElementById("policy-details");
+    policyDetails.style.display = "block";
+  }
+});
+
+</script>
+<script>document.getElementById('update-policy').addEventListener('click', function() {
+  var deviceType = document.getElementById("deviceType").value;
+  fetch(`http://localhost:8080/update_policies/${deviceType}`, {
+    method: 'PUT'
+  }).then(function(response) {
+    if (response.ok) {
+      alert('Policies updated');
+    } else {
+      alert('Error updating policies');
+    }
+  });
+  console.log(deviceType);
+});</script>
+
+{% endblock dashboard_content %}
+    </div>

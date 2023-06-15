@@ -21,6 +21,11 @@ class MongoService(object):
     def find_policies(self, criteria):
         policies = self.database["policies"].find(criteria)
         return policies
+
+    def delete_policy(self, policy_id):
+        query = {"id": policy_id}
+        policy = self.database["policies"]
+        policy.delete_one(query)
     
     def find_things(self, criteria):
         things = self.database["things"].find(criteria)

@@ -2,28 +2,96 @@
 
 
 {% block dashboard_content %}
+<div class="col-md-9">
+<h2 class="text-center">Notifications</h2>
+    <h6 class="text-center">-Here you have an overview of all your notifications-</h6>
+    <br><br>
 
-<h2 class="mb-5 text-center">Notifications</h2>
+<div id="notification-list"></div>
+<button id="prev-page">Prev</button>
+<span id="page-numbers"></span>
+<button id="next-page">Next</button>
 
-<table class="table mx-auto" style="display: block;">
-    <thead>
-        <tr>
-            <th>Notificationnumber</th>
-            <th>Content</th>
-            <th>Time</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for number, notification in notification_ids.items() %}
-            <tr>
-                <td>{{ number }}</td>
-                <td>{{ notification.content }}</td>
-                <td>{{ notification.time }}</td>
-                <td>{{ notification.date }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<script>
+  var currentPage = 1;
+  var perPage = 20;
 
+  function getNotifications(page) {
+    fetch(`http://localhost:8080/get_notifications?page=${page}`)
+      .then(response => response.json())
+      .then(data => {
+        var notificationList = document.getElementById("notification-list");
+        notificationList.innerHTML = '';
+
+        data.forEach(notification => {
+          var notificationElement = document.createElement("li");
+          notificationElement.textContent = `${notification.message} (${notification.date} ${notification.time})`;
+          notificationList.appendChild(notificationElement);
+        });
+
+        var pageNumbers = document.getElementById("page-numbers");
+        pageNumbers.textContent = `Page ${currentPage}`;
+      });
+  }
+
+  getNotifications(currentPage);
+
+  document.getElementById('prev-page').addEventListener('click', function() {
+    if (currentPage > 1) {
+      currentPage--;
+      getNotifications(currentPage);
+    }
+  });
+
+  document.getElementById('next-page').addEventListener('click', function() {
+    currentPage++;
+    getNotifications(currentPage);
+  });
+
+function getNotifications(page) {
+  fetch(`http://localhost:8080/get_notifications?page=${page}`)
+    .then(response => response.json())
+    .then(data => {
+      var notificationList = document.getElementById("notification-list");
+      notificationList.innerHTML = '';
+
+      var table = document.createElement("table");
+      table.style.borderCollapse = "collapse";
+      table.style.width = "100%";
+
+      var headerRow = document.createElement("tr");
+      var messageHeader = document.createElement("th");
+      messageHeader.textContent = "Message";
+      headerRow.appendChild(messageHeader);
+      var dateHeader = document.createElement("th");
+      dateHeader.textContent = "Date";
+      headerRow.appendChild(dateHeader);
+      var timeHeader = document.createElement("th");
+      timeHeader.textContent = "Time";
+      headerRow.appendChild(timeHeader);
+      table.appendChild(headerRow);
+
+      data.forEach(notification => {
+        var row = document.createElement("tr");
+        var messageCell = document.createElement("td");
+        messageCell.textContent = notification.message;
+        row.appendChild(messageCell);
+        var dateCell = document.createElement("td");
+        dateCell.textContent = notification.date;
+        row.appendChild(dateCell);
+        var timeCell = document.createElement("td");
+        timeCell.textContent = notification.time;
+        row.appendChild(timeCell);
+        table.appendChild(row);
+      });
+
+      notificationList.appendChild(table);
+
+      var pageNumbers = document.getElementById("page-numbers");
+      pageNumbers.textContent = `Page ${currentPage}`;
+    });
+}
+
+</script>
 {% endblock dashboard_content %}
+</div>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/RCIoT.iml" filepath="$PROJECT_DIR$/.idea/RCIoT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/admin_interface.iml" filepath="$PROJECT_DIR$/.idea/admin_interface.iml" />
     </modules>
   </component>
 </project>

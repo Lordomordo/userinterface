@@ -2,46 +2,181 @@
 
 
 {% block dashboard_content %}
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
 
-<h2 class="mb-5 text-center">Get Policy</h2>
-<br>
+th, td {
+  text-align: left;
+  padding: 8px;
+}
 
-<div class="container-sm dashboard">
-    <div class="row">
-        <div class="col">
-            <div class="row sidebar-row">
-                <div class="col-md-15 main mx-auto">
-                <form class="delete-form" method="POST" action="{{url_for('policy_api.policylist')}}">
-                    <div>
-                        <div class="form-group">
-                            <table>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Description</th>
-                                    <th>Actor</th>
-                                    <th>Actee</th>
-                                </tr>
-                                {% for policies_id, policies_info in policies_ids.items() %}
-                                    <tr>
-                                        <td>{{ policies_id }}</td>
-                                        <td>{{ policies_info["description"] }}</td>
-                                        <td>{{ policies_info["device_actor"]["type"] }}</td>
-                                        <td>{{ policies_info["device_actee"]["type"] }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                </form>
-                    <br>
-                    <br>
-                    <p><b>*</b> actor means the device that starts the action, the actee means the device on which the action is done</p>
-                    <p>if a <b>*</b> is used on either the actor or the actee, it means that any device can be used for it</p>
-                </div>
-            </div>
-        </div>
-    </div>
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.container {
+    display: flex;
+  }
+</style>
+
+    <div class="col-md-9">
+
+
+<h2 class="text-center">Get Policy</h2>
+<h6 class="text-center">-Here you can see a list of all your policies, sorted by the selected device type-</h6>
+<br><br>
+<div class="container">
+  <div class="form-group">
+    <label for="deviceType"><b>Device Type:</b></label>
+    <select id="deviceType" name="deviceType">
+      <option value="">--Please choose an option--</option>
+      <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
+      <option value="smartphone">Smartphone</option>
+      <option value="thermostat">Thermostat</option>
+      <option value="washer">Washer</option>
+      <option value="washing_machine">Washing Machine</option>
+      <option value="weather_station">Weather Station</option>
+      <option value="window">Window</option>
+    </select>
+  </div>
+  <div class="form-group" style="margin-left: 250px">
+    <label><b>Policies:</b></label>
+    <div id="policy-list"></div>
+  </div>
 </div>
 
 
+
+
+<script>
+document.getElementById("deviceType").addEventListener("change", function() {
+  var policyList = document.getElementById("policy-list");
+  policyList.innerHTML = "";
+
+  if (this.value !== "") {
+    fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
+      .then(response => response.json())
+      .then(data => {
+        var specificPolicies = data.specific_policies;
+        var generalPolicies = data.general_policies;
+
+        specificPolicies.forEach(policy => {
+          var policyElement = document.createElement("div");
+          policyElement.textContent = policy;
+          policyList.appendChild(policyElement);
+        });
+
+        generalPolicies.forEach(policy => {
+          var policyElement = document.createElement("div");
+          policyElement.textContent = policy;
+          policyList.appendChild(policyElement);
+        });
+      });
+  }
+});
+
+</script>
+
+<div id="policy-details" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black;">
+  <pre id="policy-code"></pre>
+  <button id="close-popup">Close</button>
+  <button id="delete-policy" style="position: absolute; bottom: 20px; right: 20px; background-color: red;">Delete Policy</button>
+  <button id="share-policy">Share Policy</button>
+</div>
+
+<script>
+  var policyList = document.getElementById("policy-list");
+  policyList.addEventListener("click", function(event) {
+    if (event.target.tagName === "DIV") {
+      var policyDetails = document.getElementById("policy-details");
+      policyDetails.style.display = "block";
+    }
+  });
+  var closePopupButton = document.getElementById("close-popup");
+  closePopupButton.addEventListener("click", function() {
+    var policyDetails = document.getElementById("policy-details");
+    policyDetails.style.display = "none";
+  });
+    var policyList = document.getElementById("policy-list");
+  policyList.addEventListener("click", function(event) {
+    if (event.target.tagName === "DIV") {
+      var deviceType = document.getElementById("deviceType").value;
+      var policyName = event.target.textContent;
+
+      fetch(`http://localhost:8080/sub_policy_details/local/${deviceType}/${policyName}`)
+        .then(response => response.text())
+        .then(policyCode => {
+          var policyCodeElement = document.getElementById("policy-code");
+          policyCodeElement.textContent = policyCode;
+
+          var policyDetails = document.getElementById("policy-details");
+          policyDetails.style.display = "block";
+          });
+          }
+          });
+</script>
+
+<script>var deletePolicyButton = document.getElementById("delete-policy");
+deletePolicyButton.addEventListener("click", function() {
+});</script>
+<script>
+var deletePolicyButton = document.getElementById("delete-policy");
+deletePolicyButton.addEventListener("click", function() {
+  var deviceType = document.getElementById("deviceType").value;
+  var policyNameElement = document.getElementById("policy-code");
+  var policyName = policyNameElement.textContent;
+  var policyNameMatch = policyName.match(/def\s+(\w+)\(/);
+  if (policyNameMatch) {
+    policyName = policyNameMatch[1];
+  }
+  fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then(result => {
+      var policyDetails = document.getElementById("policy-details");
+      policyDetails.style.display = "none";
+      location.reload();
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+var sharePolicyButton = document.getElementById("share-policy");
+sharePolicyButton.addEventListener("click", function() {
+  var deviceType = document.getElementById("deviceType").value;
+  var policyNameElement = document.getElementById("policy-code");
+  var policyName = policyNameElement.textContent;
+  var policyNameMatch = policyName.match(/def\s+(\w+)\(/);
+  if (policyNameMatch) {
+    policyName = policyNameMatch[1];
+  }
+  fetch(`http://localhost:8080/share_sub_policy/${deviceType}/${policyName}`, { method: 'POST' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then(result => {
+
+      var policyDetails = document.getElementById("policy-details");
+      policyDetails.style.display = "none";
+      location.reload();
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+</script>
 {% endblock dashboard_content %}
+    </div>

@@ -1,0 +1,382 @@
+{% extends "home.html" %}
+
+{% block link %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='css/register.css')}}">
+{% endblock link %}
+{% block dashboard_content %}
+<style>
+  .container {
+    display: flex;
+  }
+</style>
+
+    <div class="col-md-9">
+
+      <h2 class="text-center">Add a Policy</h2>
+      <h6 class="text-center">-Here you can create your own policies-</h6>
+      <br><br>
+<div style="text-align: right;">
+  <img src = "static\images\Description_add_policy.jpg" alt = "" width = "450" height = "300" style="position: absolute; top: 0px; right: -300px;">
+</div>
+<div class="container" style="margin-left: -15px">
+  <div class="form-group">
+    <label for="deviceType">Device Type:</label>
+    <select id="deviceType" name="deviceType">
+      <option value="">--Please choose an option--</option>
+      <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
+      <option value="smartphone">Smartphone</option>
+      <option value="thermostat">Thermostat</option>
+      <option value="washer">Washer</option>
+      <option value="washing_machine">Washing Machine</option>
+      <option value="weather_station">Weather Station</option>
+      <option value="window">Window</option>
+    </select>
+  </div>
+
+  <div class="form-group" style="margin-left: 50px;">
+    <label>Priority:</label><br>
+    <input type="radio" id="mandatory" name="priority" value="mandatory">
+    <label for="mandatory">Mandatory</label><br>
+    <input type="radio" id="double-check" name="priority" value="double-check">
+    <label for="double-check">Double check</label><br>
+    <input type="radio" id="optional" name="priority" value="optional">
+    <label for="optional">Optional</label>
+  </div>
+</div>
+
+    <div class="form-group">
+      <label for="sub_policy_name">Policy Name:</label><br>
+      <textarea id="sub_policy_name" name="policyName" rows="1" cols="50" maxlength="50"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="sub_policy_code">Policy Text:</label><br>
+      <textarea id="sub_policy_code" name="policyText" rows="4" cols="150" maxlength="200"></textarea>
+    </div>
+
+        <div style="display: flex;">
+      <div class="form-group" style="margin-right: 20px;">
+        <label for="action">Action:</label>
+        <select id="action" name="action">
+          <option value="">--Select an actee--</option>
+          <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
+          <option value="smartphone">Smartphone</option>
+          <option value="thermostat">Thermostat</option>
+          <option value="washer">Washer</option>
+          <option value="washing_machine">Washing Machine</option>
+          <option value="weather_station">Weather Station</option>
+          <option value="window">Window</option>
+        </select>
+      </div>
+
+        <div class="form-group" style="margin-left: 50px; white-space: nowrap;">
+  <label>To Do:</label>
+  <div id="todo-options"></div>
+</div>
+
+<script>
+  document.getElementById("action").addEventListener("change", function() {
+    var todoOptions = document.getElementById("todo-options");
+    todoOptions.innerHTML = "";
+
+    if (this.value === "window") {
+      var openOption = document.createElement("input");
+      openOption.type = "radio";
+      openOption.name = "todo";
+      openOption.value = "open";
+      openOption.id = "open-option";
+      openOption.style.marginRight = "10px";
+      openOption.style.marginLeft = "10px";
+      todoOptions.appendChild(openOption);
+      var openLabel = document.createElement("label");
+      openLabel.htmlFor = "open-option";
+      openLabel.textContent = "Open";
+      todoOptions.appendChild(openLabel);
+
+      var closeOption = document.createElement("input");
+      closeOption.type = "radio";
+      closeOption.name = "todo";
+      closeOption.value = "close";
+      closeOption.id = "close-option";
+      closeOption.style.marginRight = "10px";
+      closeOption.style.marginLeft = "10px";
+      todoOptions.appendChild(closeOption);
+
+      var closeLabel = document.createElement("label");
+      closeLabel.htmlFor = "close-option";
+      closeLabel.textContent = "Close";
+      todoOptions.appendChild(closeLabel);
+    }
+    else if (this.value === "carbon_monoxide_detector") {
+      var activateOption = document.createElement("input");
+      activateOption.type = "radio";
+      activateOption.name = "todo";
+      activateOption.value = "activate";
+      activateOption.id = "activate-option";
+      activateOption.style.marginRight = "10px";
+      activateOption.style.marginLeft = "10px";
+      todoOptions.appendChild(activateOption);
+
+      var activateLabel = document.createElement("label");
+      activateLabel.htmlFor = "activate-option";
+      activateLabel.textContent = "Activate";
+      todoOptions.appendChild(activateLabel);
+
+      var deactivateOption = document.createElement("input");
+      deactivateOption.type = "radio";
+      deactivateOption.name = "todo";
+      deactivateOption.value = "deactivate";
+      deactivateOption.id = "deactivate-option";
+      deactivateOption.style.marginRight = "10px";
+      deactivateOption.style.marginLeft = "10px";
+      todoOptions.appendChild(deactivateOption);
+
+     var deactivateLabel = document.createElement("label");
+      deactivateLabel.htmlFor = "deactivate-option";
+      deactivateLabel.textContent = "Deactivate";
+      todoOptions.appendChild(deactivateLabel);
+    }
+
+      else if (this.value === "thermostat") {
+      var ac_onOption = document.createElement("input");
+      ac_onOption.type = "radio";
+      ac_onOption.name = "todo";
+      ac_onOption.value = "ac_on";
+      ac_onOption.id = "ac_on-option";
+      ac_onOption.style.marginRight = "10px";
+      ac_onOption.style.marginLeft = "10px";
+      todoOptions.appendChild(ac_onOption);
+
+      var ac_onLabel = document.createElement("label");
+      ac_onLabel.htmlFor = "ac_on-option";
+      ac_onLabel.textContent = "AC-On";
+      todoOptions.appendChild(ac_onLabel);
+
+      var ac_offOption = document.createElement("input");
+      ac_offOption.type = "radio";
+      ac_offOption.name = "todo";
+      ac_offOption.value = "ac_off";
+      ac_offOption.id = "ac_off-option";
+      ac_offOption.style.marginRight = "10px";
+      ac_offOption.style.marginLeft = "10px";
+      todoOptions.appendChild(ac_offOption);
+
+      var ac_offLabel = document.createElement("label");
+      ac_offLabel.htmlFor = "ac_off-option";
+      ac_offLabel.textContent = "AC-Off";
+      todoOptions.appendChild(ac_offLabel);
+
+      var turn_heating_onOption = document.createElement("input");
+      turn_heating_onOption.type = "radio";
+      turn_heating_onOption.name = "todo";
+      turn_heating_onOption.value = "turn_heating_on";
+      turn_heating_onOption.id = "turn_heating_on-option";
+      turn_heating_onOption.style.marginRight = "10px";
+      turn_heating_onOption.style.marginLeft = "10px";
+      todoOptions.appendChild(turn_heating_onOption);
+
+      var turn_heating_onLabel = document.createElement("label");
+      turn_heating_onLabel.htmlFor = "turn_heating_on-option";
+      turn_heating_onLabel.textContent = "Turn Heating On";
+      todoOptions.appendChild(turn_heating_onLabel);
+
+      var turn_heating_offOption = document.createElement("input");
+      turn_heating_offOption.type = "radio";
+      turn_heating_offOption.name = "todo";
+      turn_heating_offOption.value = "turn_heating_off";
+      turn_heating_offOption.id = "turn_heating_off-option";
+      turn_heating_offOption.style.marginRight = "10px";
+      turn_heating_offOption.style.marginLeft = "10px";
+      todoOptions.appendChild(turn_heating_offOption);
+
+      var turn_heating_offLabel = document.createElement("label");
+      turn_heating_offLabel.htmlFor = "turn_heating_off-option";
+      turn_heating_offLabel.textContent = "Turn Heating Off";
+      todoOptions.appendChild(turn_heating_offLabel);
+
+      var turn_fan_onOption = document.createElement("input");
+      turn_fan_onOption.type = "radio";
+      turn_fan_onOption.name = "todo";
+      turn_fan_onOption.value = "turn_fan_on";
+      turn_fan_onOption.id = "turn_fan_on-option";
+      turn_fan_onOption.style.marginRight = "10px";
+      turn_fan_onOption.style.marginLeft = "10px";
+      todoOptions.appendChild(turn_fan_onOption);
+
+      var turn_fan_onLabel = document.createElement("label");
+      turn_fan_onLabel.htmlFor = "turn_fan_on-option";
+      turn_fan_onLabel.textContent = "Turn Fan On";
+      todoOptions.appendChild(turn_fan_onLabel);
+
+      var turn_fan_offOption = document.createElement("input");
+      turn_fan_offOption.type = "radio";
+      turn_fan_offOption.name = "todo";
+      turn_fan_offOption.value = "turn_fan_off";
+      turn_fan_offOption.id = "turn_fan_off-option";
+      turn_fan_offOption.style.marginRight = "10px";
+      turn_fan_offOption.style.marginLeft = "10px";
+      todoOptions.appendChild(turn_fan_offOption);
+
+      var turn_fan_offLabel = document.createElement("label");
+      turn_fan_offLabel.htmlFor = "turn_fan_off-option";
+      turn_fan_offLabel.textContent = "Turn Fan Off";
+      todoOptions.appendChild(turn_fan_offLabel);
+      }
+  });
+</script>
+</div>
+
+<div class="container">
+  <div class="form-group" style="margin-left: -15px;">
+    <label for="imports">Imports:</label>
+    <select id="imports" name="imports">
+      <option value="">--Please choose an option--</option>
+      <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
+      <option value="smartphone">Smartphone</option>
+      <option value="thermostat">Thermostat</option>
+      <option value="washer">Washer</option>
+      <option value="washing_machine">Washing Machine</option>
+      <option value="weather_station">Weather Station</option>
+      <option value="window">Window</option>
+    </select>
+  </div>
+  <div class="form-group" style="margin-left: 57px">
+    <label>Policies: (optional)</label>
+    <div id="policy-lists"></div>
+  </div>
+</div>
+
+<script>
+document.getElementById("imports").addEventListener("change", function() {
+  var policyLists = document.getElementById("policy-lists");
+  policyLists.innerHTML = "";
+
+  if (this.value !== "") {
+    fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
+      .then(response => response.json())
+      .then(data => {
+        var specificPolicies = data.specific_policies;
+        var generalPolicies = data.general_policies;
+
+        specificPolicies.forEach(policy => {
+          var policyElement = document.createElement("div");
+
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          policyElement.appendChild(checkbox);
+
+          var policyName = document.createTextNode(policy);
+          policyElement.appendChild(policyName);
+
+          policyLists.appendChild(policyElement);
+        });
+
+        generalPolicies.forEach(policy => {
+          var policyElement = document.createElement("div");
+
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          policyElement.appendChild(checkbox);
+
+          var policyName = document.createTextNode(policy);
+          policyElement.appendChild(policyName);
+
+          policyLists.appendChild(policyElement);
+        });
+      });
+  }
+});
+</script>
+
+      <form class="register-form" method="POST" action="http://localhost:8080/add_sub_policy">
+        <div class="form-group">
+          <button id="addButton" type="submit" class="btn btn-primary mt-3">Add Policy</button>
+        </div>
+      </form>
+
+              <script>
+function createPolicyObject() {
+  var deviceType = document.getElementById("deviceType").value;
+
+  var priorityRadio = document.querySelector('input[name="priority"]:checked');
+  var priority = priorityRadio ? priorityRadio.value : null;
+  var policyName = document.getElementById("sub_policy_name").value;
+  var policyText = document.getElementById("sub_policy_code").value;
+  var actionDevice = document.getElementById("action").value;
+
+  var actionToDos = [];
+  var radios = document.querySelectorAll('#todo-options input[type="radio"]:checked');
+  radios.forEach(function(radio) {
+    actionToDos.push(radio.value);
+  });
+
+  var actions = actionToDos.map(function(toDo) {
+    return {"device": actionDevice, "to_do": toDo};
+  });
+
+  var importsDevice = document.getElementById("imports").value;
+
+  var importsPolicies = [];
+  var checkboxes = document.querySelectorAll('#policy-lists input[type="checkbox"]:checked');
+  checkboxes.forEach(function(checkbox) {
+    importsPolicies.push(checkbox.nextSibling.textContent);
+  });
+
+  var importsArray = [importsDevice].concat(importsPolicies);
+
+  var importsStrings = importsPolicies.map(function(policy) {
+    return `from policies.${importsDevice} import ${policy}`;
+  });
+
+  var policy = {
+    "priority": priority,
+    "actions": actions,
+    "sub_policy_name": policyName,
+    "sub_policy_code": policyText,
+    "imports": importsStrings,
+    "device_type": deviceType
+  };
+  console.log(policy);
+  return policy;
+}
+
+      </script>
+
+
+<script>
+  document.querySelector('.register-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var policy = createPolicyObject();
+    fetch('http://localhost:8080/add_sub_policy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(policy)
+    });
+  });
+</script>
+<div id="successMessage" style="display: none;"></div>
+      <script>
+        document.getElementById("addButton").addEventListener("click", function() {
+
+    var policy = createPolicyObject();
+
+
+    if (policy.priority && policy.device_type && policy.sub_policy_name && policy.sub_policy_code) {
+
+        var successMessage = document.getElementById("successMessage");
+        successMessage.innerHTML = "Policy object generated successfully!";
+        successMessage.style.display = "block";
+
+
+        setTimeout(function() {
+            successMessage.style.display = "none";
+        }, 3000);
+    }
+});
+      </script>
+    </div>
+
+{% endblock dashboard_content %}

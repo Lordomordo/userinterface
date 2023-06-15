@@ -1,10 +1,25 @@
 {% extends "home.html" %}
 
 {% block dashboard_content %}
-<h2 class="mb-5">Welcome user!</h2>
-<p>This tool is for managing the policies for your smart building.</p>
-<br><br>
-<img src = "static\images\Test_grafik.png" alt = "" width = "320" height = "200">
+<style>
+    .center{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+</style>
+<h2 class="mb-5 text-center">Welcome Admin!</h2>
+<p class="text-center">This is your tool for managing your policies for IoT-Devices in your Smart Home or Smart Building!</p>
+<p class="text-center">You have many different possibilites on how to interact with your policies.</p>
+<br>
+<p class="text-center">You can look at all available policies in your building under the "Policies"-tab and share or delete them.</p>
+<p class="text-center">Under "New Policies" you can create your own policies.</p>
+<br>
+<p class="text-center">The "Notifications"-tab shows all notifications that occur in your system. "Pending Policies" shows the policies you created, where you can decide if you want to add it to your system.</p>
+<br>
+<p class="text-center">Finally in the "Community"-tab, you can download and add policies from other users to your system.</p>
+<br>
+<img src = "static\images\SmartHome.jpg" alt = "" width = "320" height = "200" class="center">
 {% endblock dashboard_content %}
 
 

@@ -68,6 +68,22 @@ def thinglist():
     mongo_service.find_things()
     return make_response("Worked", 200)
 
+@policy_api.route('/addPolicy', methods=['POST'])
+def addPolicy():
+
+    mongo_service = MongoService()
+    mongo_service.add_policy()
+    return make_response("Worked", 200)
+
+@policy_api.route('/deletePolicy', methods=['POST', 'DELETE'])
+@policy_api.route('/deletePolicy/<policyid>', methods=['POST', 'DELETE'])
+def deletePolicy(policyid):
+
+    mongo_service = MongoService()
+    mongo_service.delete_policy(policyid)
+    return make_response(("Worked", 200))
+
+
 @policy_api.route('/deleteDevice', methods=['POST', 'DELETE'])
 @policy_api.route('/deleteDevice/<thing_id>', methods=['POST', 'DELETE'])
 def deleteDevice(thing_id):

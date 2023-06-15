@@ -1,0 +1,57 @@
+{% extends "home.html" %}
+
+{% block link %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='css/register.css')}}">
+{% endblock link %}
+
+{% block dashboard_content %}
+
+      <h2 class="mb-5">Delete a Policy</h2>
+
+        <div class="container-sm dashboard">
+    <div class="row">
+        <div class="col">
+            <div class="row sidebar-row">
+
+                <form class="delete-form" method="POST" action="{{url_for('policy_api.deletePolicy')}}">
+                    <div>
+                        <div class="form-group">
+                            <table>
+                                <tr>
+                                    <th>ID</th>
+                                </tr>
+                                {% for policyid in policyid %}
+                                    <tr>
+                                        <td><li><input type="radio" name="policyid" value="{{policyid}}">{{ policyid }}</li></td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                                    <div class="form-group">
+          <button id="delete" type="button" class="btn btn-primary mt-3" onclick="submitForm()">Delete Policy</button>
+        </div>
+                            <script>
+function submitForm() {
+    let form = document.querySelector('.delete-form');
+    let policyid = document.querySelector('input[name="policyid"]:checked').value;
+    form.action = "{{url_for('policy_api.deletePolicy')}}".replace('deletePolicy', 'deletePolicy/' + policyid);
+    form.submit();
+}
+</script>
+                        </div>
+                    </div>
+                </form>
+</div>
+                </div>
+</div>
+        </div>
+                </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock dashboard_content %}

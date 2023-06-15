@@ -21,6 +21,7 @@ db_name = 'Cluster0'
 mongo_client = MongoClient(atlas_uri)
 database = mongo_client[db_name]
 collection = database["devices"]
+collection_notifications = database["notifications"]
 
 message_handler = MessageHandler()
 washing_machine = ElectronicDevice(device_id="washing_machine", work_power=400, last_cleaning=4)
