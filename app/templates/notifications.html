@@ -2,15 +2,29 @@
 
 
 {% block dashboard_content %}
+<style>
+  .center {
+    display: flex;
+    justify-content: center;
+  }
+  button {
+  margin: 0 8px;
+    border-radius: 9px;
+  }
+</style>
+
 <div class="col-md-9">
 <h2 class="text-center">Notifications</h2>
     <h6 class="text-center">-Here you have an overview of all your notifications-</h6>
+    <p class="text-center">-With the buttons down below, you can navigate through them!-</p>
     <br><br>
 
 <div id="notification-list"></div>
-<button id="prev-page">Prev</button>
-<span id="page-numbers"></span>
-<button id="next-page">Next</button>
+<div class="center">
+  <button id="prev-page">Prev</button>
+  <span id="page-numbers"></span>
+  <button id="next-page">Next</button>
+</div>
 
 <script>
   var currentPage = 1;

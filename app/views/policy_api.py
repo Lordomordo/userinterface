@@ -75,6 +75,10 @@ def addPolicy():
     mongo_service.add_policy()
     return make_response("Worked", 200)
 
+@policy_api.route('/changePolicy', methods=['POST'])
+def changePolicy():
+    return
+
 @policy_api.route('/deletePolicy', methods=['POST', 'DELETE'])
 @policy_api.route('/deletePolicy/<policyid>', methods=['POST', 'DELETE'])
 def deletePolicy(policyid):

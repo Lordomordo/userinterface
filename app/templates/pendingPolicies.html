@@ -22,6 +22,21 @@ th {
 .container {
     display: flex;
   }
+    .policy-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#policy-details {
+    border-radius: 10px;
+}
+
+#policy-details button {
+    border-radius: 10px;
+    padding: 1px 5px;
+    margin-right: 10px;
+}
 </style>
 
     <div class="col-md-9">
@@ -32,7 +47,7 @@ th {
 
 <div class="container">
   <div class="form-group">
-    <label for="deviceType">Device Type:</label>
+    <label for="deviceType"><b>Device Type:</b></label>
     <select id="deviceType" name="deviceType">
       <option value="">--Please choose an option--</option>
       <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
@@ -45,60 +60,58 @@ th {
     </select>
   </div>
   <div class="form-group" style="margin-left: 250px">
-    <label>Policies:</label>
+    <label><b>Policies:</b></label>
     <div id="policy-list"></div>
   </div>
 </div>
 
 <script>
 document.getElementById("deviceType").addEventListener("change", function() {
-  var policyList = document.getElementById("policy-list");
-  policyList.innerHTML = "";
-
-  if (this.value !== "") {
-    fetch(`http://localhost:8080/pending_new_sub_policies/${this.value}`)
-      .then(response => response.text())
-      .then(data => {
-        var policyElement = document.createElement("div");
-        policyElement.textContent = data;
-        policyList.appendChild(policyElement);
-      });
-  }
+    var policyList = document.getElementById("policy-list");
+    policyList.innerHTML = "";
+    if (this.value !== "") {
+        fetch(`http://localhost:8080/pending_new_sub_policies/${this.value}`)
+            .then(response => response.text())
+            .then(data => {
+                if (data !== "No new policies for this device type") {
+                    var policyElement = document.createElement("div");
+                    policyElement.textContent = data;
+                    policyElement.classList.add("policy-link");
+                    policyList.appendChild(policyElement);
+                } else {
+                    var policyElement = document.createElement("div");
+                    policyElement.textContent = data;
+                    policyList.appendChild(policyElement);
+                }
+            });
+    }
 });
+
 
 </script>
 
 <div id="policy-details" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black;">
   <pre id="policy-code"></pre>
   <button id="close-popup">Close</button>
-  <button id="update-policy" style="position: absolute; bottom: 20px; right: 20px; background-color: blue;">Update Policy</button>
+  <button id="update-policy" style="position: absolute; bottom: 20px; right: 20px; background-color: lightblue;">Update Policy</button>
 </div>
 
 <script>
-  var policyList = document.getElementById("policy-list");
-  policyList.addEventListener("click", function(event) {
-    if (event.target.tagName === "DIV") {
-      var policyDetails = document.getElementById("policy-details");
-      policyDetails.style.display = "block";
+ var policyList = document.getElementById("policy-list");
+policyList.addEventListener("click", function(event) {
+    if (event.target.tagName === "DIV" && event.target.textContent !== "No new policies for this device type") {
+        var policyName = event.target.textContent;
+        var policyCodeElement = document.getElementById("policy-code");
+        policyCodeElement.textContent = policyName;
+        var policyDetails = document.getElementById("policy-details");
+        policyDetails.style.display = "block";
     }
-  });
-
+});
   var closePopupButton = document.getElementById("close-popup");
   closePopupButton.addEventListener("click", function() {
     var policyDetails = document.getElementById("policy-details");
     policyDetails.style.display = "none";
   });
-var policyList = document.getElementById("policy-list");
-policyList.addEventListener("click", function(event) {
-  if (event.target.tagName === "DIV") {
-    var policyName = event.target.textContent;
-    var policyCodeElement = document.getElementById("policy-code");
-    policyCodeElement.textContent = policyName;
-
-    var policyDetails = document.getElementById("policy-details");
-    policyDetails.style.display = "block";
-  }
-});
 
 </script>
 <script>document.getElementById('update-policy').addEventListener('click', function() {
@@ -111,6 +124,7 @@ policyList.addEventListener("click", function(event) {
     } else {
       alert('Error updating policies');
     }
+    location.reload();
   });
   console.log(deviceType);
 });</script>

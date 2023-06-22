@@ -23,6 +23,81 @@ th {
 .container {
     display: flex;
   }
+  .policy-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius:34px
+}
+.slider.round:before{
+    border-radius:50%
+}
+
+#policy-details {
+    border-radius: 10px;
+}
+
+#policy-details button {
+    border-radius: 10px;
+    padding: 1px 5px;
+    margin-right: 10px;
+}
+
 </style>
 
     <div class="col-md-9">
@@ -30,6 +105,10 @@ th {
 
 <h2 class="text-center">Get Policy</h2>
 <h6 class="text-center">-Here you can see a list of all your policies, sorted by the selected device type-</h6>
+<p class="text-center">-By clicking on a policy, you can see its details!</p>
+<p class="text-center">-With the change-button you can change a policy-</p>
+<p class="text-center">-With the share-button you can share a policy with the community-</p>
+<p class="text-center">-With the delete-button you can delete a policy-</p>
 <br><br>
 <div class="container">
   <div class="form-group">
@@ -53,41 +132,46 @@ th {
 
 
 
-
 <script>
 document.getElementById("deviceType").addEventListener("change", function() {
-  var policyList = document.getElementById("policy-list");
-  policyList.innerHTML = "";
-
-  if (this.value !== "") {
-    fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
-      .then(response => response.json())
-      .then(data => {
-        var specificPolicies = data.specific_policies;
-        var generalPolicies = data.general_policies;
-
-        specificPolicies.forEach(policy => {
-          var policyElement = document.createElement("div");
-          policyElement.textContent = policy;
-          policyList.appendChild(policyElement);
-        });
-
-        generalPolicies.forEach(policy => {
-          var policyElement = document.createElement("div");
-          policyElement.textContent = policy;
-          policyList.appendChild(policyElement);
-        });
-      });
-  }
+    var policyList = document.getElementById("policy-list");
+    policyList.innerHTML = "";
+    if (this.value !== "") {
+        fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
+            .then(response => response.json())
+            .then(data => {
+                var specificPolicies = data.specific_policies;
+                var generalPolicies = data.general_policies;
+                specificPolicies.forEach(policy => {
+                    var policyElement = document.createElement("div");
+                    policyElement.textContent = policy;
+                    policyElement.classList.add("policy-link");
+                    policyList.appendChild(policyElement);
+                });
+                generalPolicies.forEach(policy => {
+                    var policyElement = document.createElement("div");
+                    policyElement.textContent = policy;
+                    policyElement.classList.add("policy-link");
+                    policyList.appendChild(policyElement);
+                });
+            });
+    }
 });
+
 
 </script>
 
-<div id="policy-details" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black;">
+<div id="policy-details" style="min-width: 600px; display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black;">
   <pre id="policy-code"></pre>
   <button id="close-popup">Close</button>
-  <button id="delete-policy" style="position: absolute; bottom: 20px; right: 20px; background-color: red;">Delete Policy</button>
+  <button id="delete-policy" style="position: absolute; right: 20px; background-color: red;">Delete Policy</button>
   <button id="share-policy">Share Policy</button>
+  <button id="change-policy">Change Policy</button>
+    <label class="switch">
+  <input type="checkbox" id="switch">
+  <span class="slider round"></span>
+</label>
+<p id="policy-text" style="display: none;">This policy is an example for a description of a policy. <br>Here you will find further information about it.</p>
 </div>
 
 <script>
@@ -120,63 +204,125 @@ document.getElementById("deviceType").addEventListener("change", function() {
           });
           }
           });
-</script>
+          var switchButton = document.getElementById("switch");
+var policyText = document.getElementById("policy-text");
 
-<script>var deletePolicyButton = document.getElementById("delete-policy");
-deletePolicyButton.addEventListener("click", function() {
-});</script>
+switchButton.addEventListener("change", function() {
+    if (this.checked) {
+        policyText.style.display = "block";
+    } else {
+        policyText.style.display = "none";
+    }
+});
+
+</script>
+<script>
+var changePolicyButton = document.getElementById("change-policy");
+changePolicyButton.addEventListener("click", function() {
+  var deviceType = document.getElementById("deviceType").value;
+  var policyName = document.querySelector("#policy-list .selected").textContent;
+  fetch(`http://localhost:8080/change_sub_policy/local/${deviceType}/${policyName}`)
+    .then(response => response.json())
+    .then(policyData => {
+      localStorage.setItem("policyData", JSON.stringify(policyData));
+      window.location.href = "changePolicy";
+    });
+});
+var policyList = document.getElementById("policy-list");
+policyList.addEventListener("click", function(event) {
+  if (event.target.tagName === "DIV") {
+    var selectedPolicies = document.querySelectorAll("#policy-list .selected");
+    for (var i = 0; i < selectedPolicies.length; i++) {
+      selectedPolicies[i].classList.remove("selected");
+    }
+    event.target.classList.add("selected");
+  }
+});
+
+
+
+</script>
+<div id="deleteSuccessMessage" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid blue;">
+    <p>Policy object deleted successfully!</p>
+</div>
 <script>
 var deletePolicyButton = document.getElementById("delete-policy");
 deletePolicyButton.addEventListener("click", function() {
-  var deviceType = document.getElementById("deviceType").value;
-  var policyNameElement = document.getElementById("policy-code");
-  var policyName = policyNameElement.textContent;
-  var policyNameMatch = policyName.match(/def\s+(\w+)\(/);
-  if (policyNameMatch) {
-    policyName = policyNameMatch[1];
-  }
-  fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`An error occurred: ${response.status}`);
-      }
-      return response.text();
-    })
-    .then(result => {
-      var policyDetails = document.getElementById("policy-details");
-      policyDetails.style.display = "none";
-      location.reload();
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    var deviceType = document.getElementById("deviceType").value;
+    var policyNameElement = document.getElementById("policy-code");
+    var policyName = policyNameElement.textContent;
+    var policyNameMatch = policyName.match(/def\s+(\w+)\(/);
+    if (policyNameMatch) {
+        policyName = policyNameMatch[1];
+    }
+    fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`An error occurred: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(result => {
+            var deleteSuccessMessage = document.getElementById("deleteSuccessMessage");
+            deleteSuccessMessage.style.display = "block";
+            setTimeout(function() {
+                deleteSuccessMessage.style.display = "none";
+            }, 3000);
+            setTimeout(function() {
+                location.reload();
+            }, 4000);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 });
+</script>
+      <div id="shareSuccessMessage" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid blue;">
+    <p>Policy object shared successfully!</p>
+</div>
+        <div id="shareFailMessage" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid red;">
+    <p>Policy object sharing failed! The policy likely already exists in community!</p>
+</div>
+
+      <script>
 var sharePolicyButton = document.getElementById("share-policy");
 sharePolicyButton.addEventListener("click", function() {
-  var deviceType = document.getElementById("deviceType").value;
-  var policyNameElement = document.getElementById("policy-code");
-  var policyName = policyNameElement.textContent;
-  var policyNameMatch = policyName.match(/def\s+(\w+)\(/);
-  if (policyNameMatch) {
-    policyName = policyNameMatch[1];
-  }
-  fetch(`http://localhost:8080/share_sub_policy/${deviceType}/${policyName}`, { method: 'POST' })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`An error occurred: ${response.status}`);
-      }
-      return response.text();
-    })
-    .then(result => {
-
-      var policyDetails = document.getElementById("policy-details");
-      policyDetails.style.display = "none";
-      location.reload();
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    var deviceType = document.getElementById("deviceType").value;
+    var policyNameElement = document.getElementById("policy-code");
+    var policyName = policyNameElement.textContent;
+    var policyNameMatch = policyName.match(/def\s+(\w+)\(/);
+    if (policyNameMatch) {
+        policyName = policyNameMatch[1];
+    }
+    fetch(`http://localhost:8080/share_sub_policy/${deviceType}/${policyName}`, { method: 'POST' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`An error occurred: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(result => {
+            var policyDetails = document.getElementById("policy-details");
+            policyDetails.style.display = "none";
+            var shareSuccessMessage = document.getElementById("shareSuccessMessage");
+            shareSuccessMessage.style.display = "block";
+            setTimeout(function() {
+                shareSuccessMessage.style.display = "none";
+            }, 2000);
+            setTimeout(function() {
+                location.reload();
+            }, 3000);
+        })
+        .catch(error => {
+            console.error(error);
+            var shareFailMessage = document.getElementById("shareFailMessage");
+            shareFailMessage.style.display = "block";
+            setTimeout(function() {
+                shareFailMessage.style.display = "none";
+            }, 3000);
+        });
 });
+
 </script>
 {% endblock dashboard_content %}
     </div>

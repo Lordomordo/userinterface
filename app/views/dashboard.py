@@ -114,6 +114,10 @@ def deletePolicy():
     policyid = [policy["id"] for policy in policies]
     return render_template('deletePolicy.html', tagname='deletePolicy', policyid=policyid)
 
+@dashboard.route('/changePolicy')
+def changePolicy():
+    return render_template('changePolicy.html', tagname='changePolicy')
+
 
 @dashboard.route('/notifications')
 def notifications():
