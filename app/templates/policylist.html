@@ -109,6 +109,7 @@ input:checked + .slider:before {
 <p class="text-center">-With the change-button you can change a policy-</p>
 <p class="text-center">-With the share-button you can share a policy with the community-</p>
 <p class="text-center">-With the delete-button you can delete a policy-</p>
+<p class="text-center">-By clicking on the switch-button you can see further information-</p>
 <br><br>
 <div class="container">
   <div class="form-group">
@@ -165,8 +166,8 @@ document.getElementById("deviceType").addEventListener("change", function() {
   <pre id="policy-code"></pre>
   <button id="close-popup">Close</button>
   <button id="delete-policy" style="position: absolute; right: 20px; background-color: red;">Delete Policy</button>
-  <button id="share-policy">Share Policy</button>
-  <button id="change-policy">Change Policy</button>
+  <button id="share-policy" style="background-color: lightblue;">Share Policy</button>
+  <button id="change-policy" style="background-color: lightgreen">Change Policy</button>
     <label class="switch">
   <input type="checkbox" id="switch">
   <span class="slider round"></span>

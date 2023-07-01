@@ -231,7 +231,7 @@
   <div class="form-group" style="margin-left: -15px;">
     <label for="imports"><b>Imports:</b></label>
     <select id="imports" name="imports">
-      <option value="">--Please choose an option--</option>
+      <option value="">--Choose an option (optional)--</option>
       <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
       <option value="smartphone">Smartphone</option>
       <option value="thermostat">Thermostat</option>
@@ -242,7 +242,7 @@
     </select>
   </div>
   <div class="form-group" style="margin-left: 57px">
-    <label><b>Policies:</b> (optional)</label>
+    <label><b>Policies:</b></label>
     <div id="policy-lists"></div>
   </div>
 </div>
@@ -364,19 +364,36 @@ document.querySelector('.register-form').addEventListener('submit', function(eve
 <div id="failMessage" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid red;">
     <p>Policy object generation failed. Please fill out all required fields.</p>
 </div>
+<div id="existingMessage" style="display: none; position: fixed; top: 50%; left: 50% transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid red">
+  <p>The policy name is already taken. Please choose a different name!</p>
+</div>
 
       <script>
 document.getElementById("addButton").addEventListener("click", function() {
     var policy = createPolicyObject();
     if (policy.priority && policy.device_type && policy.sub_policy_name && policy.sub_policy_code) {
-        var successMessage = document.getElementById("successMessage");
-        successMessage.style.display = "block";
-        setTimeout(function() {
-            successMessage.style.display = "none";
-        }, 3000);
-        setTimeout(function() {
-            location.reload();
-        }, 4000);
+        fetch(`http://localhost:8080/get_sub_policies/local/${policy.device_type}`)
+            .then(response => response.json())
+            .then(data => {
+                var specificPolicies = data.specific_policies;
+                var generalPolicies = data.general_policies;
+                if (specificPolicies.includes(policy.sub_policy_name) || generalPolicies.includes(policy.sub_policy_name)) {
+                    var existingMessage = document.getElementById("existingMessage");
+                    existingMessage.style.display = "block";
+                    setTimeout(function() {
+                        existingMessage.style.display = "none";
+                    }, 3000);
+                } else {
+                    var successMessage = document.getElementById("successMessage");
+                    successMessage.style.display = "block";
+                    setTimeout(function() {
+                        successMessage.style.display = "none";
+                    }, 3000);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 4000);
+                }
+            })
     } else {
         var failMessage = document.getElementById("failMessage");
         failMessage.style.display = "block";
@@ -385,6 +402,7 @@ document.getElementById("addButton").addEventListener("click", function() {
         }, 3000);
     }
 });
+
 
 
 </script>
