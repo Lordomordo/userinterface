@@ -9,6 +9,15 @@
   .container {
     display: flex;
   }
+
+    label[for="deviceType"] {text-decoration: underline; text-decoration-color: red;}
+    label[for="priority"] {text-decoration: underline; text-decoration-color: orange;}
+    label[for="sub_policy_name"] {text-decoration: underline; text-decoration-color: yellow;}
+    label[for="sub_policy_code"] {text-decoration: underline; text-decoration-color: green;}
+    label[for="action"] {text-decoration: underline; text-decoration-color: blue;}
+    label[for="todo"] {text-decoration: underline; text-decoration-color: purple;}
+    label[for="imports"] {text-decoration: underline; text-decoration-color: pink;}
+    label[for="policies"] {text-decoration: underline; text-decoration-color: brown;}
 </style>
 
     <div class="col-md-9">
@@ -17,8 +26,13 @@
       <h6 class="text-center">-Here you can create your own policies-</h6>
       <br><br>
 <div style="text-align: right;">
-  <img src = "static\images\Description_add_policy.jpg" alt = "" width = "450" height = "300" style="position: absolute; top: 0px; right: -300px;">
+  <img src = "static\images\Description_add_policy.jpg" alt = "" width = "450" height ="390" style="position: absolute; top: -15px; right: -300px;">
 </div>
+
+<div style="text-align: right;">
+  <img src = "static\images\NewPolicyPic.png" alt = "" width = "120" height ="120" style="position: absolute; top: -15px; left: 100px;">
+</div>
+
 <div class="container" style="margin-left: -15px">
   <div class="form-group">
     <label for="deviceType"><b>Device Type:</b></label>
@@ -35,7 +49,7 @@
   </div>
 
   <div class="form-group" style="margin-left: 50px;">
-    <label><b>Priority</b>:</label><br>
+    <label for="priority"><b>Priority</b>:</label><br>
     <input type="radio" id="mandatory" name="priority" value="mandatory">
     <label for="mandatory">Mandatory</label><br>
     <input type="radio" id="double-check" name="priority" value="double-check">
@@ -71,7 +85,7 @@
       </div>
 
         <div class="form-group" style="margin-left: 50px; white-space: nowrap;">
-  <label><b>To Do:</b></label>
+  <label for="todo"><b>To Do:</b></label>
   <div id="todo-options"></div>
 </div>
 
@@ -242,7 +256,7 @@
     </select>
   </div>
   <div class="form-group" style="margin-left: 57px">
-    <label><b>Policies:</b></label>
+    <label for="policies"><b>Policies:</b></label>
     <div id="policy-lists"></div>
   </div>
 </div>

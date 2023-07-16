@@ -9,6 +9,14 @@
   .container {
     display: flex;
   }
+    label[for="deviceType"] {text-decoration: underline; text-decoration-color: red;}
+    label[for="priority"] {text-decoration: underline; text-decoration-color: orange;}
+    label[for="sub_policy_name"] {text-decoration: underline; text-decoration-color: yellow;}
+    label[for="sub_policy_code"] {text-decoration: underline; text-decoration-color: green;}
+    label[for="action"] {text-decoration: underline; text-decoration-color: blue;}
+    label[for="todo"] {text-decoration: underline; text-decoration-color: purple;}
+    label[for="imports"] {text-decoration: underline; text-decoration-color: pink;}
+    label[for="policies"] {text-decoration: underline; text-decoration-color: brown;}
 </style>
 
     <div class="col-md-9">
@@ -17,11 +25,11 @@
       <h6 class="text-center">-Here you can change your own policies-</h6>
       <br><br>
 <div style="text-align: right;">
-  <img src = "static\images\Description_add_policy.jpg" alt = "" width = "450" height = "300" style="position: absolute; top: 0px; right: -300px;">
+  <img src = "static\images\Description_add_policy.jpg" alt = "" width = "450" height = "390" style="position: absolute; top: -15px; right: -300px;">
 </div>
 <div class="container" style="margin-left: -15px">
   <div class="form-group">
-    <label for="deviceType">Device Type:</label>
+    <label for="deviceType"><b>Device Type:</b></label>
     <select id="deviceType" name="deviceType">
       <option value="">--Please choose an option--</option>
       <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
@@ -35,7 +43,7 @@
   </div>
 
   <div class="form-group" style="margin-left: 50px;">
-    <label>Priority:</label><br>
+    <label for="priority"><b>Priority:</b></label><br>
     <input type="radio" id="mandatory" name="priority" value="mandatory">
     <label for="mandatory">Mandatory</label><br>
     <input type="radio" id="double_check" name="priority" value="double_check">
@@ -46,12 +54,12 @@
 </div>
 
     <div class="form-group">
-      <label for="sub_policy_name">Policy Name:</label><br>
+      <label for="sub_policy_name"><b>Policy Name:</b></label><br>
       <textarea id="sub_policy_name" name="policyName" rows="1" cols="50" maxlength="50"readonly></textarea>
     </div>
 
     <div class="form-group">
-      <label for="sub_policy_code">Policy Text:</label><br>
+      <label for="sub_policy_code"><b>Policy Text:</b></label><br>
       <textarea id="sub_policy_code" name="policyText" rows="4" cols="150" maxlength="200"></textarea>
     </div>
 <script>
@@ -71,7 +79,7 @@ document.getElementById("sub_policy_code").value = policyData.sub_policy_code;
 
         <div style="display: flex;">
       <div class="form-group" style="margin-right: 20px;">
-        <label for="action">Action:</label>
+        <label for="action"><b>Action:</b></label>
         <select id="action" name="action">
           <option value="">--Select an actee-- (optional)</option>
           <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
@@ -85,7 +93,7 @@ document.getElementById("sub_policy_code").value = policyData.sub_policy_code;
       </div>
 
         <div class="form-group" style="margin-left: 50px; white-space: nowrap;">
-  <label>To Do:</label>
+  <label for="todo"><b>To Do:</b></label>
   <div id="todo-options"></div>
 </div>
 
@@ -243,9 +251,9 @@ document.getElementById("sub_policy_code").value = policyData.sub_policy_code;
 
 <div class="container">
   <div class="form-group" style="margin-left: -15px;">
-    <label for="imports">Imports:</label>
+    <label for="imports"><b>Imports:</b></label>
     <select id="imports" name="imports">
-      <option value="">--Please choose an option--</option>
+      <option value="">--Choose an option (optional)--</option>
       <option value="carbon_monoxide_detector">Carbon Monoxide Detector</option>
       <option value="smartphone">Smartphone</option>
       <option value="thermostat">Thermostat</option>
@@ -256,27 +264,14 @@ document.getElementById("sub_policy_code").value = policyData.sub_policy_code;
     </select>
   </div>
   <div class="form-group" style="margin-left: 57px">
-    <label>Policies: (optional)</label>
+    <label for="policies"><b>Policies:</b></label>
     <div id="policy-lists"></div>
   </div>
 </div>
 
 <script>
-
-var policyData = JSON.parse(localStorage.getItem("policyData"));
-console.log(policyData);
-if (policyData.actions && policyData.actions.length > 0) {
-  document.getElementById("action").value = policyData.actions[0].device;
-  document.getElementById("action").dispatchEvent(new Event("change"));
-  setTimeout(function() {
-    document.querySelector(`input[name="todo"][value="${policyData.actions[0].to_do}"]`).checked = true;
-  }, 100);
-}
-
 if (policyData.imports && policyData.imports.length > 0) {
-  console.log(policyData.imports);
   var deviceType = policyData.imports[0].split(" ")[1].split(".")[1];
-  console.log(deviceType);
   document.getElementById("imports").value = deviceType;
   document.getElementById("imports").dispatchEvent(new Event("change"));
 }
@@ -352,7 +347,7 @@ if (policyData.imports && policyData.imports.length > 0) {
 }
 
 </script>
-      <form class="register-form" method="POST" action="http://localhost:8080/add_sub_policy">
+      <form class="register-form" method="POST" action="http://localhost:8080/change_sub_policy">
         <div class="form-group">
           <button id="changeButton" type="submit" class="btn btn-primary mt-3">Change Policy</button>
         </div>
@@ -409,52 +404,42 @@ function createPolicyObject() {
 
 <script>
 document.querySelector('.register-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    var policy = createPolicyObject();
-    var deviceType = document.getElementById("deviceType").value;
-    var policyName = policy.sub_policy_name;
-    fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`An error occurred: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(result => {
-            fetch('http://localhost:8080/add_sub_policy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(policy)
-            });
-        })
-        .catch(error => {
-            console.error(error);
-        });
+  event.preventDefault();
+  var policy = createPolicyObject();
+  var deviceType = document.getElementById("deviceType").value;
+  var policyName = policy.sub_policy_name;
+  fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then(result => {
+      fetch('http://localhost:8080/add_sub_policy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(policy)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`An error occurred: ${response.status}`);
+        }
+        alert("Policy object changed successfully!");
+        window.location.href = "pendingPolicies";
+      });
+    })
+    .catch(error => {
+      console.error(error);
+    });
 });
+
 
 </script>
-<div id="successMessage" style="display: none;"></div>
-      <script>
-        document.getElementById("changeButton").addEventListener("click", function() {
-
-    var policy = createPolicyObject();
 
 
-    if (policy.priority && policy.device_type && policy.sub_policy_name && policy.sub_policy_code) {
-
-        var successMessage = document.getElementById("successMessage");
-        successMessage.innerHTML = "Policy object generated successfully!";
-        successMessage.style.display = "block";
-
-
-        setTimeout(function() {
-            successMessage.style.display = "none";
-        }, 2000);
-    }
-});
-      </script>
     </div>
 
 {% endblock dashboard_content %}
