@@ -12,8 +12,8 @@
 
     label[for="deviceType"] {text-decoration: underline; text-decoration-color: red;}
     label[for="priority"] {text-decoration: underline; text-decoration-color: orange;}
-    label[for="sub_policy_name"] {text-decoration: underline; text-decoration-color: yellow;}
-    label[for="sub_policy_code"] {text-decoration: underline; text-decoration-color: green;}
+    label[for="policy_name"] {text-decoration: underline; text-decoration-color: yellow;}
+    label[for="policy_code"] {text-decoration: underline; text-decoration-color: green;}
     label[for="action"] {text-decoration: underline; text-decoration-color: blue;}
     label[for="todo"] {text-decoration: underline; text-decoration-color: purple;}
     label[for="imports"] {text-decoration: underline; text-decoration-color: pink;}
@@ -60,13 +60,13 @@
 </div>
 
     <div class="form-group">
-      <label for="sub_policy_name"><b>Policy Name:</b></label><br>
-      <textarea id="sub_policy_name" name="policyName" rows="1" cols="50" maxlength="50"></textarea>
+      <label for="policy_name"><b>Policy Name:</b></label><br>
+      <textarea id="policy_name" name="policyName" rows="1" cols="50" maxlength="50"></textarea>
     </div>
 
     <div class="form-group">
-      <label for="sub_policy_code"><b>Policy Code:</b></label> (Python)<br>
-      <textarea id="sub_policy_code" name="policyText" rows="4" cols="150" maxlength="200"></textarea>
+      <label for="policy_code"><b>Policy Code:</b></label> (Python)<br>
+      <textarea id="policy_code" name="policyText" rows="4" cols="150" maxlength="200"></textarea>
     </div>
 
         <div style="display: flex;">
@@ -267,7 +267,7 @@ document.getElementById("imports").addEventListener("change", function() {
   policyLists.innerHTML = "";
 
   if (this.value !== "") {
-    fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
+    fetch(`http://localhost:8080/get_policies/local/${this.value}`)
       .then(response => response.json())
       .then(data => {
         var specificPolicies = data.specific_policies;
@@ -303,7 +303,7 @@ document.getElementById("imports").addEventListener("change", function() {
 });
 </script>
 
-      <form class="register-form" method="POST" action="http://localhost:8080/add_sub_policy">
+      <form class="register-form" method="POST" action="http://localhost:8080/add_policy">
         <div class="form-group">
           <button id="addButton" type="submit" class="btn btn-primary mt-3">Add Policy</button>
         </div>
@@ -315,8 +315,8 @@ function createPolicyObject() {
 
   var priorityRadio = document.querySelector('input[name="priority"]:checked');
   var priority = priorityRadio ? priorityRadio.value : null;
-  var policyName = document.getElementById("sub_policy_name").value;
-  var policyText = document.getElementById("sub_policy_code").value;
+  var policyName = document.getElementById("policy_name").value;
+  var policyText = document.getElementById("policy_code").value;
   var actionDevice = document.getElementById("action").value;
 
   var actionToDos = [];
@@ -346,8 +346,8 @@ function createPolicyObject() {
   var policy = {
     "priority": priority,
     "actions": actions,
-    "sub_policy_name": policyName,
-    "sub_policy_code": policyText,
+    "policy_name": policyName,
+    "policy_code": policyText,
     "imports": importsStrings,
     "device_type": deviceType
   };
@@ -361,8 +361,8 @@ function createPolicyObject() {
 document.querySelector('.register-form').addEventListener('submit', function(event) {
     event.preventDefault();
     var policy = createPolicyObject();
-    if (policy.priority && policy.device_type && policy.sub_policy_name && policy.sub_policy_code) {
-        fetch('http://localhost:8080/add_sub_policy', {
+    if (policy.priority && policy.device_type && policy.policy_name && policy.policy_code) {
+        fetch('http://localhost:8080/add_policy', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -385,13 +385,13 @@ document.querySelector('.register-form').addEventListener('submit', function(eve
       <script>
 document.getElementById("addButton").addEventListener("click", function() {
     var policy = createPolicyObject();
-    if (policy.priority && policy.device_type && policy.sub_policy_name && policy.sub_policy_code) {
-        fetch(`http://localhost:8080/get_sub_policies/local/${policy.device_type}`)
+    if (policy.priority && policy.device_type && policy.policy_name && policy.policy_code) {
+        fetch(`http://localhost:8080/get_policies/local/${policy.device_type}`)
             .then(response => response.json())
             .then(data => {
                 var specificPolicies = data.specific_policies;
                 var generalPolicies = data.general_policies;
-                if (specificPolicies.includes(policy.sub_policy_name) || generalPolicies.includes(policy.sub_policy_name)) {
+                if (specificPolicies.includes(policy.policy_name) || generalPolicies.includes(policy.policy_name)) {
                     var existingMessage = document.getElementById("existingMessage");
                     existingMessage.style.display = "block";
                     setTimeout(function() {

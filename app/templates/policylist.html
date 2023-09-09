@@ -141,7 +141,7 @@ document.getElementById("deviceType").addEventListener("change", function() {
     var policyList = document.getElementById("policy-list");
     policyList.innerHTML = "";
     if (this.value !== "") {
-        fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
+        fetch(`http://localhost:8080/get_policies/local/${this.value}`)
             .then(response => response.json())
             .then(data => {
                 var specificPolicies = data.specific_policies;
@@ -197,7 +197,7 @@ document.getElementById("deviceType").addEventListener("change", function() {
       var deviceType = document.getElementById("deviceType").value;
       var policyName = event.target.textContent;
 
-      fetch(`http://localhost:8080/sub_policy_details/local/${deviceType}/${policyName}`)
+      fetch(`http://localhost:8080/policy_details/local/${deviceType}/${policyName}`)
         .then(response => response.text())
         .then(policyCode => {
           var policyCodeElement = document.getElementById("policy-code");
@@ -225,7 +225,7 @@ var changePolicyButton = document.getElementById("change-policy");
 changePolicyButton.addEventListener("click", function() {
   var deviceType = document.getElementById("deviceType").value;
   var policyName = document.querySelector("#policy-list .selected").textContent;
-  fetch(`http://localhost:8080/change_sub_policy/local/${deviceType}/${policyName}`)
+  fetch(`http://localhost:8080/change_policy/local/${deviceType}/${policyName}`)
     .then(response => response.json())
     .then(policyData => {
       localStorage.setItem("policyData", JSON.stringify(policyData));
@@ -260,7 +260,7 @@ deletePolicyButton.addEventListener("click", function() {
         if (policyNameMatch) {
             policyName = policyNameMatch[1];
         }
-        fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
+        fetch(`http://localhost:8080/delete_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`An error occurred: ${response.status}`);
@@ -301,7 +301,7 @@ sharePolicyButton.addEventListener("click", function() {
     if (policyNameMatch) {
         policyName = policyNameMatch[1];
     }
-    fetch(`http://localhost:8080/share_sub_policy/${deviceType}/${policyName}`, { method: 'POST' })
+    fetch(`http://localhost:8080/share_policy/${deviceType}/${policyName}`, { method: 'POST' })
         .then(response => {
             if (!response.ok) {
                 throw new Error(`An error occurred: ${response.status}`);

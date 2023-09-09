@@ -75,7 +75,7 @@ document.getElementById("deviceType").addEventListener("change", function() {
     var policyList = document.getElementById("policy-list");
     policyList.innerHTML = "";
     if (this.value !== "") {
-        fetch(`http://localhost:8080/pending_new_sub_policies/${this.value}`)
+        fetch(`http://localhost:8080/pending_new_policies/${this.value}`)
             .then(response => response.text())
             .then(data => {
                 if (data !== "No new policies for this device type") {

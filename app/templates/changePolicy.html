@@ -11,8 +11,8 @@
   }
     label[for="deviceType"] {text-decoration: underline; text-decoration-color: red;}
     label[for="priority"] {text-decoration: underline; text-decoration-color: orange;}
-    label[for="sub_policy_name"] {text-decoration: underline; text-decoration-color: yellow;}
-    label[for="sub_policy_code"] {text-decoration: underline; text-decoration-color: green;}
+    label[for="policy_name"] {text-decoration: underline; text-decoration-color: yellow;}
+    label[for="policy_code"] {text-decoration: underline; text-decoration-color: green;}
     label[for="action"] {text-decoration: underline; text-decoration-color: blue;}
     label[for="todo"] {text-decoration: underline; text-decoration-color: purple;}
     label[for="imports"] {text-decoration: underline; text-decoration-color: pink;}
@@ -54,13 +54,13 @@
 </div>
 
     <div class="form-group">
-      <label for="sub_policy_name"><b>Policy Name:</b></label><br>
-      <textarea id="sub_policy_name" name="policyName" rows="1" cols="50" maxlength="50"readonly></textarea>
+      <label for="policy_name"><b>Policy Name:</b></label><br>
+      <textarea id="policy_name" name="policyName" rows="1" cols="50" maxlength="50"readonly></textarea>
     </div>
 
     <div class="form-group">
-      <label for="sub_policy_code"><b>Policy Code:</b></label> (Python)<br>
-      <textarea id="sub_policy_code" name="policyText" rows="4" cols="150" maxlength="200"></textarea>
+      <label for="policy_code"><b>Policy Code:</b></label> (Python)<br>
+      <textarea id="policy_code" name="policyText" rows="4" cols="150" maxlength="200"></textarea>
     </div>
 <script>
 
@@ -72,8 +72,8 @@ if (["mandatory", "double_check", "optional"].includes(policyData.priority)) {
   document.querySelector(`input[name="priority"][value="${policyData.priority}"]`).checked = true;
 }
 
-document.getElementById("sub_policy_name").value = policyData.sub_policy_name;
-document.getElementById("sub_policy_code").value = policyData.sub_policy_code;
+document.getElementById("policy_name").value = policyData.policy_name;
+document.getElementById("policy_code").value = policyData.policy_code;
 
 </script>
 
@@ -281,7 +281,7 @@ document.getElementById("imports").addEventListener("change", function() {
   policyLists.innerHTML = "";
 
   if (this.value !== "") {
-    fetch(`http://localhost:8080/get_sub_policies/local/${this.value}`)
+    fetch(`http://localhost:8080/get_policies/local/${this.value}`)
       .then(response => response.json())
       .then(data => {
         var specificPolicies = data.specific_policies;
@@ -347,7 +347,7 @@ if (policyData.imports && policyData.imports.length > 0) {
 }
 
 </script>
-      <form class="register-form" method="POST" action="http://localhost:8080/change_sub_policy">
+      <form class="register-form" method="POST" action="http://localhost:8080/change_policy">
         <div class="form-group">
           <button id="changeButton" type="submit" class="btn btn-primary mt-3">Change Policy</button>
         </div>
@@ -359,8 +359,8 @@ function createPolicyObject() {
 
   var priorityRadio = document.querySelector('input[name="priority"]:checked');
   var priority = priorityRadio ? priorityRadio.value : null;
-  var policyName = document.getElementById("sub_policy_name").value;
-  var policyText = document.getElementById("sub_policy_code").value;
+  var policyName = document.getElementById("policy_name").value;
+  var policyText = document.getElementById("policy_code").value;
   var actionDevice = document.getElementById("action").value;
 
   var actionToDos = [];
@@ -390,8 +390,8 @@ function createPolicyObject() {
   var policy = {
     "priority": priority,
     "actions": actions,
-    "sub_policy_name": policyName,
-    "sub_policy_code": policyText,
+    "policy_name": policyName,
+    "policy_code": policyText,
     "imports": importsStrings,
     "device_type": deviceType
   };
@@ -407,8 +407,8 @@ document.querySelector('.register-form').addEventListener('submit', function(eve
   event.preventDefault();
   var policy = createPolicyObject();
   var deviceType = document.getElementById("deviceType").value;
-  var policyName = policy.sub_policy_name;
-  fetch(`http://localhost:8080/delete_sub_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
+  var policyName = policy.policy_name;
+  fetch(`http://localhost:8080/delete_policy/local/${deviceType}/${policyName}`, { method: 'DELETE' })
     .then(response => {
       if (!response.ok) {
         throw new Error(`An error occurred: ${response.status}`);
@@ -416,7 +416,7 @@ document.querySelector('.register-form').addEventListener('submit', function(eve
       return response.text();
     })
     .then(result => {
-      fetch('http://localhost:8080/add_sub_policy', {
+      fetch('http://localhost:8080/add_policy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

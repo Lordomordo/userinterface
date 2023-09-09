@@ -78,12 +78,12 @@ document.getElementById("deviceType").addEventListener("change", function() {
   policyList.innerHTML = "";
 
   if (this.value !== "") {
-    fetch(`http://localhost:8080/get_sub_policies/community/${this.value}`)
+    fetch(`http://localhost:8080/get_policies/community/${this.value}`)
       .then(response => response.json())
       .then(data => {
         data.forEach(policy => {
           var policyElement = document.createElement("div");
-          policyElement.textContent = policy.sub_policy_name;
+          policyElement.textContent = policy.policy_name;
           policyElement.classList.add("policy-link");
           policyList.appendChild(policyElement);
         });
@@ -116,7 +116,7 @@ policyList.addEventListener("click", function(event) {
     var deviceType = document.getElementById("deviceType").value;
     var policyName = event.target.textContent;
 
-    fetch(`http://localhost:8080/sub_policy_details/community/${deviceType}/${policyName}`)
+    fetch(`http://localhost:8080/policy_details/community/${deviceType}/${policyName}`)
       .then(response => response.text())
       .then(policyCode => {
         var policyCodeElement = document.getElementById("policy-code");
@@ -139,10 +139,10 @@ downloadPolicyButton.addEventListener("click", function() {
     var deviceType = document.getElementById("deviceType").value;
     var policyNameElement = document.getElementById("policy-code");
     var policyName = policyNameElement.getAttribute("data-policy-name");
-    fetch(`http://localhost:8080/add_sub_policy_from_db/community/${deviceType}/${policyName}`, { method: 'POST' })
+    fetch(`http://localhost:8080/add_policy_from_db/community/${deviceType}/${policyName}`, { method: 'POST' })
         .then(response => response.text())
         .then(result => {
-            if (result === "Sub-policy already exists") {
+            if (result === "Policy already exists") {
                 var downloadFailMessage = document.getElementById("downloadFailMessage");
                 downloadFailMessage.style.display = "block";
                 setTimeout(function() {
@@ -172,7 +172,7 @@ deletePolicyButton.addEventListener("click", function() {
         var policyNameElement = document.getElementById("policy-code");
         var policyName = policyNameElement.getAttribute("data-policy-name");
 
-        fetch(`http://localhost:8080/delete_sub_policy/community/${deviceType}/${policyName}`, { method: 'DELETE' })
+        fetch(`http://localhost:8080/delete_policy/community/${deviceType}/${policyName}`, { method: 'DELETE' })
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`An error occurred: ${response.status}`);
@@ -218,7 +218,7 @@ deletePolicyButton.addEventListener("click", function() {
     policyName = policyNameMatch[1];
   }
 
-  fetch(`http://localhost:8080/delete_sub_policy/community/${deviceType}/${policyName}`, { method: 'DELETE' })
+  fetch(`http://localhost:8080/delete_policy/community/${deviceType}/${policyName}`, { method: 'DELETE' })
     .then(response => {
       if (!response.ok) {
         throw new Error(`An error occurred: ${response.status}`);
